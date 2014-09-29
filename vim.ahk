@@ -129,20 +129,16 @@ return
 
 Esc::
     if(!normal.on)
-    {
-        Mode("n")
         notify("normal", 400)
-        Clear()
-    }
+    Mode("n")
+    Clear()
 return
 
 ^C::
     if(!normal.on)
-    {
-        Mode("n")
         notify("normal", 400)
-        Clear()
-    }
+    Mode("n")
+    Clear()
 return
 
 i::
@@ -892,6 +888,8 @@ return
 +G::
     if (insert.on)
         Send %A_ThisHotKey%
+    else if(normal.on)
+        Send ^{Home}
 
     if (reg.on)
     {
