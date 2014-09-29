@@ -113,12 +113,10 @@ F12::
     if (!window_states[title] || window_states[title] == "suspended")
     {
         Mode("n")
-        notify("normal", 400)
     }
     else
     {
         Mode("suspended")
-        notify("Suspend", 400)
     }
 return
 
