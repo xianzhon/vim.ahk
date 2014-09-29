@@ -45,6 +45,22 @@ temp.caret := {}
 temp.caret.x := 0
 temp.caret.y := 0
 
+notify(text, time = 0)
+{
+   if (text == "")
+   {
+      Progress, Off
+      return
+   }
+
+   Progress, y989 b2 fs10 zh0 W150 WS700, %text%, , , Verdana
+   if (time != 0)
+   {
+      Sleep, %time%
+      Progress, Off
+   }
+   return
+}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; window handling
 
@@ -97,10 +113,12 @@ F12::
     if (!window_states[title] || window_states[title] == "suspended")
     {
         Mode("n")
+        notify("normal", 400)
     }
     else
     {
         Mode("suspended")
+        notify("Suspend", 400)
     }
 return
 
@@ -110,8 +128,21 @@ return
 #UseHook On
 
 Esc::
-    Mode("n")
-    Clear()
+    if(!normal.on)
+    {
+        Mode("n")
+        notify("normal", 400)
+        Clear()
+    }
+return
+
+^C::
+    if(!normal.on)
+    {
+        Mode("n")
+        notify("normal", 400)
+        Clear()
+    }
 return
 
 i::
@@ -127,6 +158,7 @@ i::
     if (normal.on)
     {
         Mode("i")
+        notify("insert", 400)
     }
 return
 
@@ -144,6 +176,7 @@ return
     if (normal.on)
     {
         Mode("i")
+        notify("insert", 400)
         Send {Home}
     }
 return
@@ -257,6 +290,8 @@ return
 +H::
     if (insert.on)
         Send %A_ThisHotKey%
+    else if(normal.on)
+        Send ^{Home}
 
     if (reg.on)
     {
@@ -270,6 +305,8 @@ return
 +J::
     if (insert.on)
         Send %A_ThisHotKey%
+    else if (normal.on)
+        Send {Pgdn}
 
     if (reg.on)
     {
@@ -278,19 +315,13 @@ return
         reg.append := true
         return
     }
-    if (normal.on)
-    {
-        if (!NAction())
-        {
-            normal.action := A_ThisHotKey
-        }
-        DoNormalCommand()
-    }
 return
 
 +K::
     if (insert.on)
         Send %A_ThisHotKey%
+    else if (normal.on)
+        Send {Pgup}
 
     if (reg.on)
     {
@@ -304,6 +335,8 @@ return
 +L::
     if (insert.on)
         Send %A_ThisHotKey%
+    else if(normal.on)
+        Send ^{End}
 
     if (reg.on)
     {

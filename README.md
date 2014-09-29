@@ -38,8 +38,15 @@ By default, the script starts in Suspended mode. It remembers the mode for each 
     i
     I
     v
+    insert mode
+        Esc/Ctrl+C: go to normal mode
 
     normal mode
+        Shift + H : Ctrl + Home
+        Shift + L : Ctrl + End
+        Shift + J : PgDn
+        Shift + K : PgUp
+
         {motion}
             h j k l
             numeric multipliers
