@@ -791,7 +791,7 @@ e::
         }
         else
         {
-            normal.action := "e"
+            normal.action := "w"
             DoNormalCommand()
         }
     }
