@@ -45,22 +45,6 @@ temp.caret := {}
 temp.caret.x := 0
 temp.caret.y := 0
 
-notify(text, time = 0)
-{
-   if (text == "")
-   {
-      Progress, Off
-      return
-   }
-
-   Progress, y989 b2 fs10 zh0 W150 WS700, %text%, , , Verdana
-   if (time != 0)
-   {
-      Sleep, %time%
-      Progress, Off
-   }
-   return
-}
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; window handling
 
@@ -126,15 +110,11 @@ return
 #UseHook On
 
 Esc::
-    if(!normal.on)
-        notify("normal", 400)
     Mode("n")
     Clear()
 return
 
 ^C::
-    if(!normal.on)
-        notify("normal", 400)
     Mode("n")
     Clear()
 return
@@ -152,7 +132,6 @@ i::
     if (normal.on)
     {
         Mode("i")
-        notify("insert", 400)
     }
 return
 
@@ -170,7 +149,6 @@ return
     if (normal.on)
     {
         Mode("i")
-        notify("insert", 400)
         Send {Home}
     }
 return
@@ -188,6 +166,12 @@ v::
     if (normal.on)
     {
         Mode("v")
+    }
+    else if(visual.on)
+    {
+        Mode("n")
+        Send {Left}  ;;; Cancel the selection
+        Send {Right}
     }
 return
 
@@ -563,22 +547,6 @@ s::
 +S::
     if (insert.on)
         Send %A_ThisHotkey%
-
-    if (reg.on)
-    {
-        reg.current := "s"
-        reg.on := false
-        reg.append := (A_ThisHotKey != "s")
-        return
-    }
-    if (normal.on)
-    {
-        if (!NAction())
-        {
-            normal.action := A_ThisHotkey
-        }
-        DoNormalCommand()
-    }
 return
 
 y::
@@ -679,7 +647,6 @@ w::
         reg.append := (A_ThisHotKey != "w")
         return
     }
-
     if (normal.on)
     {
         if (NAction()) {
@@ -691,6 +658,11 @@ w::
             normal.action := "w"
             DoNormalCommand()
         }
+    }
+    else if (visual.on)
+    {
+        visual.action := A_ThisHotKey
+        DoVisualCommand()
     }
 
     if (insert.on)
@@ -754,7 +726,7 @@ b::
         reg.on := false
         return
     }
-
+    
     if (normal.on)
     {
         if (NAction())
@@ -766,6 +738,11 @@ b::
             normal.action := "b"
             DoNormalCommand()
         }
+    }
+    else if (visual.on)
+    {
+        visual.action := A_ThisHotKey
+        DoVisualCommand()
     }
 return
 
@@ -818,6 +795,12 @@ e::
             DoNormalCommand()
         }
     }
+    else if (visual.on)
+    {
+        visual.action := A_ThisHotKey
+        DoVisualCommand()
+    }
+
 return
 
 +E::
@@ -844,6 +827,12 @@ return
             DoNormalCommand()
         }
     }
+return
+;; block other keys in normal mode
+
+r::
+    if (insert.on)
+        Send %A_ThisHotKey%
 return
 
 f::
@@ -926,46 +915,17 @@ return
 n::
     if (insert.on)
         Send %A_ThisHotKey%
-
-    if (reg.on)
-    {
-        reg.current := "n"
-        reg.on := false
-        return
-    }
-    if (normal.on)
-    {
-        Send {F3}
-    }
 return
 
 +N::
     if (insert.on)
         Send %A_ThisHotKey%
-
-    if (reg.on)
-    {
-        reg.current := "n"
-        reg.on := false
-        reg.append := true
-        return
-    }
-    if (normal.on)
-    {
-        Send +{F3}
-    }
 return
 
 o::
     if (insert.on)
         Send %A_ThisHotKey%
 
-    if (reg.on)
-    {
-        reg.current := "o"
-        reg.on := false
-        return
-    }
     if (normal.on)
     {
         if (!NAction())
@@ -1601,6 +1561,20 @@ DoVisualCommand()
         Loop % total_count
         {
             Send +{Left}
+        }
+    }
+    else if (visual.action == "e" || visual.action == "w")
+    {
+        Loop % total_count
+        {
+            Send ^+{Right}
+        }
+    }
+    else if (visual.action == "b")
+    {
+        Loop % total_count
+        {
+            Send ^+{Left}
         }
     }
     if (visual.action == "j")
