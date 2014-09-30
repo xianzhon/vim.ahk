@@ -73,8 +73,8 @@ ChangeState(wParam, lParam )
 		titleStr := titleStr "." title
 	;ToolTip % titleStr
     ;WinGetTitle title, ahk_id %lParam%
-    ;if (wParam=4) ;HSHELL_WINDOWACTIVATED
-    ;{ 
+    if (wParam=4) ;HSHELL_WINDOWACTIVATED
+    { 
         if (!window_states[title] || window_states[title] == "suspended") 
         {
             Suspend On
@@ -85,12 +85,12 @@ ChangeState(wParam, lParam )
             Suspend Off
         }
         Mode(window_states[title])
-    ;}
+    }
 }
 
 ; Toggle script 
 F12::
-#u::
+#u:: ;; This is Win + u
     global window_states
     global title
     Suspend Toggle
@@ -114,10 +114,10 @@ Esc::
     Clear()
 return
 
-^C::
-    Mode("n")
-    Clear()
-return
+;;^C::
+;;    Mode("n")
+;;    Clear()
+;;return
 
 i::
     if (insert.on) 
@@ -293,6 +293,26 @@ return
         reg.append := true
         return
     }
+return
+
+!J::
+    if (normal.on)
+        Send {Pgdn}
+return
+
+!K::
+    if (normal.on)
+        Send {Pgup}
+return
+
+!H::
+    if (normal.on)
+        Send ^{Home}
+return
+
+!L::
+    if (normal.on)
+        Send ^{End}
 return
 
 +K::

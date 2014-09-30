@@ -34,18 +34,19 @@ By default, the script starts in Suspended mode. It remembers the mode for each 
 
 ### Supported commands
 
-    Esc
-    i
+    F12 / Win + U : toggle between suspend mode and normal mode
+    i 
     I
     v
+
     insert mode
-        Esc/Ctrl+C: go to normal mode
+        Esc: go to normal mode
 
     normal mode
-        Shift + H : Ctrl + Home
-        Shift + L : Ctrl + End
-        Shift + J : PgDn
-        Shift + K : PgUp
+        Shift + H / Alt + H : Ctrl + Home
+        Shift + L / Alt + L : Ctrl + End
+        Shift + J / Alt + J : PgDn
+        Shift + K / Alt + K : PgUp
 
         {motion}
             h j k l
